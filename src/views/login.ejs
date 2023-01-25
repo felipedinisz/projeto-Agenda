@@ -1,0 +1,96 @@
+<%- include('includes/head') %> <%- include('includes/nav') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8 my-3">
+      <h1 class="text-center">Criar conta ou Entrar</h1>
+      <p class="text-center lead">Faça login ou crie sua conta abaixo</p>
+
+      <%- include("includes/messages") %>
+
+      <div class="row" style="gap: 2rem">
+        <div class="col-lg">
+          <h4>Faça seu cadastro</h4>
+          <p class="fw-light">
+            Se você ainda não tem conta, preencha o formulário abaixo.
+          </p>
+          <form action="/login/register" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="mb-3">
+              <label for="InputEmail" class="form-label">
+                Seu melhor e-mail
+              </label>
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="InputEmail"
+                aria-describedby="emailHelp"
+              />
+              <div id="emailHelp" class="form-text">
+                Nós nunca compartilharemos seu e-mail com ninguém.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="InputPassword" class="form-label">Senha</label>
+              <input
+                type="password"
+                class="form-control"
+                id="InputPassword"
+                name="password"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="InputConfirmPassword" class="form-label"
+                >Confirme sua Senha</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="InputConfirmPassword"
+                name="confirmpassword"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Criar minha conta
+            </button>
+          </form>
+        </div>
+        <div class="col-lg">
+          <h4>Faça seu login</h4>
+          <p class="fw-light">Se você já tem conta, faça login abaixo.</p>
+          <form action="/login/enter" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="mb-3">
+              <label for="InputEmail" class="form-label"> Seu e-mail </label>
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="InputEmail"
+                aria-describedby="emailHelp"
+              />
+              <div id="emailHelp" class="form-text">
+                Nós nunca compartilharemos seu e-mail com ninguém.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="InputPassword" class="form-label">Senha</label>
+              <input
+                type="password"
+                class="form-control"
+                id="InputPassword"
+                name="password"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
+</div>
+
+<%- include('includes/footer')%>
