@@ -15,7 +15,8 @@ mongoose
 const session = require("express-session");
 const mongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
-const routes = require("./routes");
+const homeRoutes = require("./routes/homeRoutes");
+const loginRoutes = require("./routes/loginRoutes");
 const path = require("path");
 const helmet = require("helmet");
 const csrf = require("csurf");
@@ -51,7 +52,8 @@ app.use(csrf());
 app.use(middlewareGlobal);
 app.use(checkCsrfError);
 app.use(csrfMiddleware);
-app.use(routes);
+app.use("/", homeRoutes);
+app.use("/login", loginRoutes)
 
 app.on("pronto", () => {
   app.listen(3000, () => {

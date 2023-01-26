@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const LoginSchema = new mongoose.Schema({
   email: {
@@ -22,36 +23,62 @@ class Login {
     this.user = null;
   }
 
-  async register() {
+  async login() {
     this.validate();
     if (this.errors.length > 0) return;
 
-    try {
-      this.user = await LoginModel.create(this.body);
-    } catch (e) {
-      console.error(
-        "Algum erro ocorreu cadastrando o usuário no servidor: " + e
-      );
+    const { email, password } = this.body;
+
+    const emailExists = await LoginModel.findOne({ email });
+
+    if(!emailExists) return this.errors.push('Usuário não existe.');
+
+    if (!bcrypt.compareSync(password, emailExists.password)) {
+      this.errors.push("Senha inválida.");
+      this.user = null;
+      return;
     }
   }
 
-  validate() {
+  async register() {
+    this.validate();
+    await this.registerValidations();
+
+    if (this.errors.length > 0) return;
+
+    const salt = bcrypt.genSaltSync();
+    this.body.password = bcrypt.hashSync(this.body.password, salt);
+
+    this.user = await LoginModel.create(this.body);
+  }
+
+  async validate() {
     this.cleanUp();
     // * Validação
 
-    const { email, password, confirmpassword } = this.body;
+    const { email, password } = this.body;
 
     // ! Os campos precisam ser preenchidos.
     if (email === "" || password === "")
-      this.errors.push("Os campos precisam ser preenchidos.");
+      return this.errors.push("Os campos precisam ser preenchidos.");
     // ! e-mail precisa ser válido
     if (!validator.isEmail(email)) this.errors.push("E-mail inválido.");
     // ! Senha precisa ter entre 3 a 50 caracteres
     if (password.length < 3 || password.length >= 50)
-      this.errors.push("A senha precisa ter entre 3 a 50 caracteres.");
-    // ! Senha e confirma senha precisam ser iguais.
+      return this.errors.push("A senha precisa ter entre 3 a 50 caracteres.");
+
+  }
+
+  async registerValidations() {
+    // ! Verifica se as senhas são iguais
+    const { email, password, confirmpassword } = this.body;
     if (password !== confirmpassword)
-      this.errors.push("As senhas precisam ser iguais.");
+    return this.errors.push("As senhas precisam ser iguais.");
+
+     // ! verifica se o email já está no sistema.
+     const emailExists = await LoginModel.findOne({ email });
+     if (emailExists)
+       return this.errors.push("Usuário já cadastrado no sistema.");
   }
 
   cleanUp() {
