@@ -29,11 +29,11 @@ class Login {
 
     const { email, password } = this.body;
 
-    const emailExists = await LoginModel.findOne({ email });
+    this.user = await LoginModel.findOne({ email });
 
-    if(!emailExists) return this.errors.push('Usuário não existe.');
+    if (!this.user) return this.errors.push("Usuário não existe.");
 
-    if (!bcrypt.compareSync(password, emailExists.password)) {
+    if (!bcrypt.compareSync(password, this.user.password)) {
       this.errors.push("Senha inválida.");
       this.user = null;
       return;
@@ -66,19 +66,17 @@ class Login {
     // ! Senha precisa ter entre 3 a 50 caracteres
     if (password.length < 3 || password.length >= 50)
       return this.errors.push("A senha precisa ter entre 3 a 50 caracteres.");
-
   }
 
   async registerValidations() {
     // ! Verifica se as senhas são iguais
     const { email, password, confirmpassword } = this.body;
     if (password !== confirmpassword)
-    return this.errors.push("As senhas precisam ser iguais.");
+      return this.errors.push("As senhas precisam ser iguais.");
 
-     // ! verifica se o email já está no sistema.
-     const emailExists = await LoginModel.findOne({ email });
-     if (emailExists)
-       return this.errors.push("Usuário já cadastrado no sistema.");
+    // ! verifica se o email já está no sistema.
+    this.user = await LoginModel.findOne({ email });
+    if (this.user) return this.errors.push("Usuário já cadastrado no sistema.");
   }
 
   cleanUp() {
