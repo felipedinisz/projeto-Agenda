@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.CONNECTIONSTRING, {
     useNewUrlParser: true,
@@ -17,6 +18,7 @@ const mongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
 const homeRoutes = require("./routes/homeRoutes");
 const loginRoutes = require("./routes/loginRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 const path = require("path");
 const helmet = require("helmet");
 const csrf = require("csurf");
@@ -55,7 +57,8 @@ app.use(checkCsrfError);
 app.use(csrfMiddleware);
 
 app.use("/", homeRoutes);
-app.use("/login", loginRoutes)
+app.use("/login", loginRoutes);
+app.use("/contact", contactRoutes);
 
 app.on("ok", () => {
   app.listen(3000, () => {

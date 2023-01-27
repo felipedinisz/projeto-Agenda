@@ -52,7 +52,7 @@ class Login {
     this.user = await LoginModel.create(this.body);
   }
 
-  async validate() {
+  validate() {
     this.cleanUp();
     // * Validação
 
@@ -87,6 +87,7 @@ class Login {
     const { email, password, confirmpassword } = this.body;
     this.body = { email, password, confirmpassword };
   }
+
 }
 
 module.exports = Login;

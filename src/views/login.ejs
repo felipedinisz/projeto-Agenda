@@ -9,13 +9,13 @@
 
       <%- include("includes/messages") %>
 
-      <div class="row" style="gap: 2rem">
-        <div class="col-lg">
+      <div class="row">
+        <div class="col-lg my-5">
           <h4>Faça seu cadastro</h4>
           <p class="fw-light">
             Se você ainda não tem conta, preencha o formulário abaixo.
           </p>
-          <form action="/login/register" method="POST">
+          <form action="/login/register" class="registerForm" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="mb-3">
               <label for="InputEmail" class="form-label">
@@ -57,11 +57,11 @@
             </button>
           </form>
         </div>
-        <div class="col-lg">
+        <div class="col-lg my-5">
           <h4>Faça seu login</h4>
           <p class="fw-light">Se você já tem conta, faça login abaixo.</p>
-          
-          <form action="/login/enter" method="POST">
+
+          <form class="loginForm" action="/login/enter" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="mb-3">
               <label for="InputEmail" class="form-label"> Seu e-mail </label>
